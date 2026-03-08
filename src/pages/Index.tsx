@@ -26,16 +26,16 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Nav */}
       <nav className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container px-4 sm:px-6 lg:px-8 flex h-14 sm:h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <GraduationCap className="h-7 w-7 text-primary" />
-            <span className="text-xl font-serif text-foreground">Instructional</span>
+            <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+            <span className="text-lg sm:text-xl font-serif text-foreground">Instructional</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {user ? (
               <>
                 <Link to="/dashboard">
-                  <Button variant="ghost" size="sm">Dashboard</Button>
+                  <Button variant="ghost" size="sm" className="text-xs sm:text-sm">Dashboard</Button>
                 </Link>
                 <Button variant="ghost" size="sm" onClick={signOut}>
                   <LogOut className="h-4 w-4" />
@@ -43,7 +43,7 @@ const Index = () => {
               </>
             ) : (
               <Link to="/auth">
-                <Button size="sm">Sign in</Button>
+                <Button size="sm" className="text-xs sm:text-sm">Sign in</Button>
               </Link>
             )}
           </div>
