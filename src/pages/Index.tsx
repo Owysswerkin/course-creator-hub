@@ -108,12 +108,12 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t border-border/50 mt-auto">
-        <div className="container py-8 flex items-center justify-between text-sm text-muted-foreground">
+        <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5 text-primary" />
             <span className="font-serif">Instructional</span>
           </div>
-          <p>© {new Date().getFullYear()} Instructional</p>
+          <p className="text-xs sm:text-sm">© {new Date().getFullYear()} Instructional</p>
         </div>
       </footer>
     </div>
