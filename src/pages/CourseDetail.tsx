@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,7 @@ const CourseDetail = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
 
   const { data: course, isLoading } = useQuery({
     queryKey: ["course", id],
@@ -22,7 +24,6 @@ const CourseDetail = () => {
         .eq("id", id!)
         .single();
       if (error) throw error;
-      // Sort lessons by sort_order
       data.lessons = (data.lessons || []).sort((a: any, b: any) => a.sort_order - b.sort_order);
       return data;
     },
@@ -83,7 +84,6 @@ const CourseDetail = () => {
     },
   });
 
-  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const activeLesson = course?.lessons?.find((l: any) => l.id === selectedLesson);
 
   if (isLoading) {
@@ -108,7 +108,6 @@ const CourseDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Nav */}
       <nav className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
@@ -117,9 +116,7 @@ const CourseDetail = () => {
           </Link>
           <div className="flex items-center gap-3">
             {user ? (
-              <Button variant="ghost" size="sm" onClick={signOut}>
-                <LogOut className="h-4 w-4" />
-              </Button>
+              <Button variant="ghost" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /></Button>
             ) : (
               <Link to="/auth"><Button size="sm">Sign in</Button></Link>
             )}
@@ -133,7 +130,6 @@ const CourseDetail = () => {
         </Link>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Sidebar - Lesson list */}
           <div className="lg:col-span-1 space-y-4">
             <div>
               <h1 className="text-2xl font-serif text-foreground">{course.title}</h1>
@@ -180,7 +176,6 @@ const CourseDetail = () => {
             </div>
           </div>
 
-          {/* Main content */}
           <div className="lg:col-span-2">
             {activeLesson ? (
               <Card>
@@ -222,5 +217,3 @@ const CourseDetail = () => {
 };
 
 export default CourseDetail;
-
-import { useState } from "react";
