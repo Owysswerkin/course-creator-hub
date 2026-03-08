@@ -30,6 +30,8 @@ jobs:
         run: npm run build
         env:
           GITHUB_ACTIONS: true
+          VITE_SUPABASE_URL: https://quvjawxcrlsuuzlyldxp.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1dmphd3hjcmxzdXV6bHlsZHhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MTQ5NTksImV4cCI6MjA4ODI5MDk1OX0.0s92GAO0MaC40lCrRESYZ3osQp3HIpAY54LforqJU7s
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
