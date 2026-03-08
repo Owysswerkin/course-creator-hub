@@ -51,18 +51,18 @@ const Index = () => {
       </nav>
 
       {/* Course Catalog */}
-      <div className="container py-12">
-        <div className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-serif text-foreground">Courses</h1>
-          <p className="mt-2 text-muted-foreground text-lg">Browse all available courses and start learning.</p>
+      <div className="container px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="mb-6 sm:mb-10">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-foreground">Courses</h1>
+          <p className="mt-2 text-muted-foreground text-base sm:text-lg">Browse all available courses and start learning.</p>
         </div>
 
         {isLoading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
-                <div className="h-44 bg-muted rounded-t-lg" />
-                <CardContent className="p-5 space-y-3">
+                <div className="h-36 sm:h-44 bg-muted rounded-t-lg" />
+                <CardContent className="p-4 sm:p-5 space-y-3">
                   <div className="h-5 bg-muted rounded w-3/4" />
                   <div className="h-4 bg-muted rounded w-full" />
                   <div className="h-4 bg-muted rounded w-1/2" />
@@ -71,19 +71,19 @@ const Index = () => {
             ))}
           </div>
         ) : courses && courses.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {courses.map((course) => (
               <Link key={course.id} to={`/courses/${course.id}`}>
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer h-full">
-                  <div className="h-44 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                  <div className="h-36 sm:h-44 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                     {course.thumbnail_url ? (
                       <img src={course.thumbnail_url} alt={course.title} className="w-full h-full object-cover" />
                     ) : (
-                      <BookOpen className="h-12 w-12 text-primary/40" />
+                      <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-primary/40" />
                     )}
                   </div>
-                  <CardContent className="p-5 space-y-2">
-                    <h3 className="text-lg font-serif text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                  <CardContent className="p-4 sm:p-5 space-y-2">
+                    <h3 className="text-base sm:text-lg font-serif text-foreground group-hover:text-primary transition-colors line-clamp-2">
                       {course.title}
                     </h3>
                     {course.description && (
@@ -98,10 +98,10 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <BookOpen className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
-            <h2 className="text-xl font-serif text-foreground mb-2">No courses yet</h2>
-            <p className="text-muted-foreground">Check back soon — new courses are on the way.</p>
+          <div className="text-center py-12 sm:py-20">
+            <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground/40 mx-auto mb-4" />
+            <h2 className="text-lg sm:text-xl font-serif text-foreground mb-2">No courses yet</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">Check back soon — new courses are on the way.</p>
           </div>
         )}
       </div>
