@@ -4,29 +4,59 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Mail, ArrowLeft, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [step, setStep] = useState<"email" | "code">("email");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: window.location.origin },
-    });
+    const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      setSent(true);
-      toast({ title: "Check your email", description: "We sent you a magic link to sign in." });
+      setStep("code");
+      toast({ title: "Code sent", description: "Check your email for a 6-digit code." });
+    }
+    setLoading(false);
+  };
+
+  const handleVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: otp,
+      type: "email",
+    });
+
+    if (error) {
+      toast({ title: "Invalid code", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Signed in", description: "Welcome!" });
+      navigate("/");
+    }
+    setLoading(false);
+  };
+
+  const handleResend = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Code resent", description: "Check your email for a new code." });
     }
     setLoading(false);
   };
@@ -43,29 +73,43 @@ const Auth = () => {
           <CardHeader className="text-center">
             <h1 className="text-3xl font-serif text-foreground mb-1">Instructional</h1>
             <CardTitle className="text-xl">
-              {sent ? "Check your inbox" : "Welcome back"}
+              {step === "code" ? "Enter your code" : "Welcome back"}
             </CardTitle>
             <CardDescription>
-              {sent
-                ? `We sent a magic link to ${email}`
+              {step === "code"
+                ? `We sent a 6-digit code to ${email}`
                 : "Enter your email to sign in or create an account"}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {sent ? (
-              <div className="text-center space-y-4">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <Mail className="h-8 w-8 text-primary" />
+            {step === "code" ? (
+              <form onSubmit={handleVerifyCode} className="space-y-6">
+                <div className="flex justify-center">
+                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Click the link in your email to sign in. You can close this tab.
-                </p>
-                <Button variant="ghost" onClick={() => setSent(false)} className="text-sm">
-                  Use a different email
+                <Button type="submit" className="w-full h-12 text-base" disabled={loading || otp.length < 6}>
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify & Sign In"}
                 </Button>
-              </div>
+                <div className="flex items-center justify-between">
+                  <Button type="button" variant="ghost" size="sm" onClick={handleResend} disabled={loading}>
+                    Resend code
+                  </Button>
+                  <Button type="button" variant="ghost" size="sm" onClick={() => { setStep("email"); setOtp(""); }}>
+                    Different email
+                  </Button>
+                </div>
+              </form>
             ) : (
-              <form onSubmit={handleLogin} className="space-y-4">
+              <form onSubmit={handleSendCode} className="space-y-4">
                 <div>
                   <Input
                     type="email"
@@ -82,7 +126,7 @@ const Auth = () => {
                   ) : (
                     <>
                       <Mail className="h-4 w-4" />
-                      Send magic link
+                      Send sign-in code
                     </>
                   )}
                 </Button>
